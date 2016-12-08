@@ -65,17 +65,52 @@ app.delete('/assets/:id', function (req, res) {
 
 // PUT /assets/:id
 app.put('/assets/:id', function (req, res) {
+	var assetId = parseInt(req.params.id, 10);
+	var matchedAsset = _.findWhere(assets, {id: assetId});
 	var body = _.pick(req.body, 'name', 'symbol', 'amount', 'price', 'description');
 	var validAttributes = {};
+
+	if (!matchedAsset) {
+		return res.status(404).send();
+	}
 
 	if (body.hasOwnProperty('name') && _.isString(body.name)) {
 		validAttributes.name = body.name;
 	} else if (body.hasOwnProperty('name')) {
 		// Bad
 		return res.status(400).send();
-	} else {
-		// Never provider attribute, no problem here
 	}
+
+	if (body.hasOwnProperty('symbol') && _.isString(body.symbol)) {
+		validAttributes.symbol = body.symbol;
+	} else if (body.hasOwnProperty('symbol')) {
+		// Bad
+		return res.status(400).send();
+	}
+
+	if (body.hasOwnProperty('amount') && _.isString(body.amount)) {
+		validAttributes.amount = body.amount;
+	} else if (body.hasOwnProperty('amount')) {
+		// Bad
+		return res.status(400).send();
+	}
+
+	if (body.hasOwnProperty('price') && _.isString(body.price)) {
+		validAttributes.price = body.price;
+	} else if (body.hasOwnProperty('price')) {
+		// Bad
+		return res.status(400).send();
+	}
+
+	if (body.hasOwnProperty('description') && _.isString(body.description)) {
+		validAttributes.description = body.description;
+	} else if (body.hasOwnProperty('description')) {
+		// Bad
+		return res.status(400).send();
+	}
+
+	_.extend(matchedAsset, validAttributes);
+	res.json(matchedAsset);
 
 });
 
