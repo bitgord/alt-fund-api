@@ -1,26 +1,13 @@
 var express = require('express');
+var bodyParser = require('body-parser');
+
 var app = express();
 var PORT = process.env.PORT || 3000;
 
-var assets = [{
-	id: 1,
-	company: 'Google',
-	ticker: 'GOOG',
-	amount: '100',
-	price: '100'
-}, {
-	id: 2,
-	company: 'Bitcoin',
-	ticker: 'BTC',
-	amount: '100',
-	price: '1000'
-}, {
-	id: 3,
-	company: 'Ethereum',
-	ticker: 'Eth',
-	amount: '1000',
-	price: '10'
-}];
+var assets = [];
+var assetNextId = 1;
+
+app.use(bodyParser.json());
 
 app.get('/', function (req, res) {
 	res.send('AltFund API Root');
@@ -47,7 +34,15 @@ app.get('/assets/:id', function (req, res) {
 	} else {
 		res.status(404).send();
 	}
+});
 
+// POST /assets
+app.post('/assets', function (req, res) {
+	var body = req.body;
+
+	console.log('description');
+
+	res.json(body);
 });
 
 app.listen(PORT, function () {
