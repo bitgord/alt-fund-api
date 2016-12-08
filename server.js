@@ -14,6 +14,12 @@ var assets = [{
 	ticker: 'BTC',
 	amount: '100',
 	price: '1000'
+}, {
+	id: 3,
+	company: 'Ethereum',
+	ticker: 'Eth',
+	amount: '1000',
+	price: '10'
 }]
 
 app.get('/', function (req, res) {
@@ -26,6 +32,9 @@ app.get('/assets', function (req, res) {
 });
 
 // GET /assets/:id
+app.get('/assets/:id', function (req, res) {
+	res.send('Asking for todo with id of ' + req.params.id)
+});
 
 app.listen(PORT, function () {
 	console.log('Express listening on port ' + PORT);
