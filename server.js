@@ -40,7 +40,7 @@ app.get('/assets/:id', function (req, res) {
 app.post('/assets', function (req, res) {
 	var body = req.body;
 
-	console.log('description');
+	console.log('description: ' + body.description);
 
 	res.json(body);
 });
