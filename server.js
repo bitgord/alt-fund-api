@@ -33,11 +33,14 @@ app.get('/assets/:id', function (req, res) {
 
 // POST /assets
 app.post('/assets', function (req, res) {
-	var body = req.body;
+	var body = _.pick(req.body, 'name', 'symbol', 'amount', 'price', 'description');
 
-	if (!_.isBoolean(body.completed) || !_.isString(body.description) || body.description.trim().length === 0) {
+	if (!_.isString(body.name) || !_.isString(body.symbol) || !_.isString(body.amount) || !_.isString(body.price) || body.description.trim().length === 0) {
 		return res.status(400).send();
 	}
+
+	// set body.description to be trimmed value
+	body.description = body.description.trim();
 
 	// add id field
 	body.id = assetNextId++;
