@@ -50,6 +50,19 @@ app.post('/assets', function (req, res) {
 	res.json(body);
 });
 
+// DELETE /assets/:id
+app.delete('/assets/:id', function (req, res) {
+	var assetId = parseInt(req.params.id, 10);
+	var matchedAsset = _.findWhere(assets, {id: assetId});
+
+	if (!matchedAsset) {
+		res.status(404).json({"error": "no asset found with that id"});
+	} else {
+		assets = _.without(assets, matchedAsset);
+		res.json(matchedAsset);
+	}
+});
+
 app.listen(PORT, function () {
 	console.log('Express listening on port ' + PORT);
 });
