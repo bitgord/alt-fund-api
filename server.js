@@ -63,6 +63,22 @@ app.delete('/assets/:id', function (req, res) {
 	}
 });
 
+// PUT /assets/:id
+app.put('/assets/:id', function (req, res) {
+	var body = _.pick(req.body, 'name', 'symbol', 'amount', 'price', 'description');
+	var validAttributes = {};
+
+	if (body.hasOwnProperty('name') && _.isString(body.name)) {
+		validAttributes.name = body.name;
+	} else if (body.hasOwnProperty('name')) {
+		// Bad
+		return res.status(400).send();
+	} else {
+		// Never provider attribute, no problem here
+	}
+
+});
+
 app.listen(PORT, function () {
 	console.log('Express listening on port ' + PORT);
 });
