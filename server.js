@@ -20,7 +20,7 @@ var assets = [{
 	ticker: 'Eth',
 	amount: '1000',
 	price: '10'
-}]
+}];
 
 app.get('/', function (req, res) {
 	res.send('AltFund API Root');
@@ -33,7 +33,21 @@ app.get('/assets', function (req, res) {
 
 // GET /assets/:id
 app.get('/assets/:id', function (req, res) {
-	res.send('Asking for todo with id of ' + req.params.id)
+	var assetId = parseInt(req.params.id, 10);
+	var matchedAsset;
+
+	assets.forEach(function (asset) {
+		if (assetId === asset.id) {
+			matchedAsset = asset;
+		}
+	});
+
+	if (matchedAsset) {
+		res.json(matchedAsset);
+	} else {
+		res.status(404).send();
+	}
+
 });
 
 app.listen(PORT, function () {
