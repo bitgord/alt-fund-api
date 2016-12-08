@@ -27,4 +27,17 @@ var Asset = sequelize.define('asset', {
 
 sequelize.sync().then(function () {
 	console.log('Everything is synced');
+
+	Asset.create({
+		 "name": "Bitcoin",
+	    "symbol": "BTC",
+	    "amount": "100",
+	    "price": "1000",
+	    "description": "#1 digi currency",
+	    "holding": true
+	}).then(function (asset) {
+		console.log('Finished');
+		console.log(asset);
+	});
+
 });
