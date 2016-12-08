@@ -25,6 +25,12 @@ app.get('/assets', function (req, res) {
 		filteredAssets = _.where(filteredAssets, {holding: false});
 	}
 
+	if (queryParams.hasOwnProperty('q') && queryParams.q.length >0) {
+		filteredAssets = _.filter(filteredAssets, function (asset) {
+			return asset.name.toLowerCase().indexOf(queryParams.q.toLowerCase()) > -1;
+		});
+	}
+
 	res.json(filteredAssets);
 });
 
