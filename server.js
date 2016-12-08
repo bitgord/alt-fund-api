@@ -35,6 +35,10 @@ app.get('/assets/:id', function (req, res) {
 app.post('/assets', function (req, res) {
 	var body = req.body;
 
+	if (!_.isBoolean(body.completed) || !_.isString(body.description) || body.description.trim().length === 0) {
+		return res.status(400).send();
+	}
+
 	// add id field
 	body.id = assetNextId++;
 	// push body into array
