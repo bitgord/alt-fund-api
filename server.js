@@ -16,7 +16,16 @@ app.get('/', function (req, res) {
 
 // GET /assets
 app.get('/assets', function (req, res) {
-	res.json(assets);
+	var queryParams = req.query;
+	var filteredAssets = assets;
+
+	if (queryParams.hasOwnProperty('holding') && queryParams.holding === 'true') {
+		filteredAssets = _.where(filteredAssets, {holding: true});
+	} else if (queryParams.hasOwnProperty('holding') && queryParams.holding === 'false') {
+		filteredAssets = _.where(filteredAssets, {holding: false});
+	}
+
+	res.json(filteredAssets);
 });
 
 // GET /assets/:id
@@ -33,9 +42,9 @@ app.get('/assets/:id', function (req, res) {
 
 // POST /assets
 app.post('/assets', function (req, res) {
-	var body = _.pick(req.body, 'name', 'symbol', 'amount', 'price', 'description');
+	var body = _.pick(req.body, 'name', 'symbol', 'amount', 'price', 'description', 'holding');
 
-	if (!_.isString(body.name) || !_.isString(body.symbol) || !_.isString(body.amount) || !_.isString(body.price) || body.description.trim().length === 0) {
+	if (!_.isString(body.name) || !_.isString(body.symbol) || !_.isString(body.amount) || !_.isString(body.price) || body.description.trim().length === 0 || !_.isBoolean(body.holding)) {
 		return res.status(400).send();
 	}
 
@@ -67,7 +76,7 @@ app.delete('/assets/:id', function (req, res) {
 app.put('/assets/:id', function (req, res) {
 	var assetId = parseInt(req.params.id, 10);
 	var matchedAsset = _.findWhere(assets, {id: assetId});
-	var body = _.pick(req.body, 'name', 'symbol', 'amount', 'price', 'description');
+	var body = _.pick(req.body, 'name', 'symbol', 'amount', 'price', 'description', 'holding');
 	var validAttributes = {};
 
 	if (!matchedAsset) {
@@ -105,6 +114,13 @@ app.put('/assets/:id', function (req, res) {
 	if (body.hasOwnProperty('description') && _.isString(body.description)) {
 		validAttributes.description = body.description;
 	} else if (body.hasOwnProperty('description')) {
+		// Bad
+		return res.status(400).send();
+	}
+
+	if (body.hasOwnProperty('holding') && _.isBoolean(body.holding)) {
+		validAttributes.holding = body.holding;
+	} else if (body.hasOwnProperty('holding')) {
 		// Bad
 		return res.status(400).send();
 	}
