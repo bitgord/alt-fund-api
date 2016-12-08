@@ -40,7 +40,10 @@ app.get('/assets/:id', function (req, res) {
 app.post('/assets', function (req, res) {
 	var body = req.body;
 
-	console.log('description: ' + body.description);
+	// add id field
+	body.id = assetNextId++;
+	// push body into array
+	assets.push(body);
 
 	res.json(body);
 });
