@@ -1,7 +1,7 @@
 var Sequelize = require('Sequelize');
 var sequelize = new Sequelize(undefined, undefined, undefined, {
 	'dialect': 'sqlite',
-	'storage': 'basic-sqlite-database.sqlite'
+	'storage': __dirname + '/basic-sqlite-database.sqlite'
 });
 
 var Asset = sequelize.define('asset', {
