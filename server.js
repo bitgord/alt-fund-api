@@ -1,5 +1,6 @@
 var express = require('express');
 var bodyParser = require('body-parser');
+var _ = require('underscore');
 
 var app = express();
 var PORT = process.env.PORT || 3000;
@@ -21,13 +22,7 @@ app.get('/assets', function (req, res) {
 // GET /assets/:id
 app.get('/assets/:id', function (req, res) {
 	var assetId = parseInt(req.params.id, 10);
-	var matchedAsset;
-
-	assets.forEach(function (asset) {
-		if (assetId === asset.id) {
-			matchedAsset = asset;
-		}
-	});
+	var matchedAsset = _.findWhere(assets, {id: assetId});
 
 	if (matchedAsset) {
 		res.json(matchedAsset);
