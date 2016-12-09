@@ -6,22 +6,48 @@ var sequelize = new Sequelize(undefined, undefined, undefined, {
 
 var Asset = sequelize.define('asset', {
 	name: {
-		type: Sequelize.STRING
+		type: Sequelize.STRING,
+		allowNull: false,
+		validate: {
+			len: [1,15]
+		}
 	},
 	symbol: {
-		type: Sequelize.STRING
+		type: Sequelize.STRING,
+		allowNull: false,
+		validate: {
+			len: [1,10]
+		}
 	},
 	amount: {
-		type: Sequelize.STRING
+		type: Sequelize.STRING,
+		allowNull: false,
+		validate: {
+			len: [1,100],
+			isNumeric: true 
+		}
 	},
 	price: {
-		type: Sequelize.STRING
+		type: Sequelize.STRING,
+		allowNull: false,
+		validate: {
+			len: [1,15],
+			isNumeric: true 
+		}
 	},
 	description: {
-		type: Sequelize.STRING
+		type: Sequelize.STRING,
+		allowNull: false,
+		validate: {
+			len: [1,100]
+		}
 	},
 	holding: {
-		type: Sequelize.BOOLEAN
+		type: Sequelize.BOOLEAN,
+		allowNull: false,
+		defaultValue: false,
+		validate: {
+		}
 	}
 })
 
@@ -38,6 +64,7 @@ sequelize.sync().then(function () {
 	}).then(function (asset) {
 		console.log('Finished');
 		console.log(asset);
+	}).catch(function (e) {
+		console.log(e);
 	});
-
 });
