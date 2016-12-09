@@ -110,14 +110,31 @@ app.post('/assets', function (req, res) {
 // DELETE /assets/:id
 app.delete('/assets/:id', function (req, res) {
 	var assetId = parseInt(req.params.id, 10);
-	var matchedAsset = _.findWhere(assets, {id: assetId});
+	
+	db.asset.destroy({
+		where: {
+			id: assetId
+		}
+	}).then(function (rowsDeleted) {
+		if (rowsDeleted === 0) {
+			res.status(404).json({
+				error: 'No asset with id'
+			});
+		} else {
+			res.status(204).send();
+		}
+	}, function () {
+		res.status(500).send();
+	});
 
-	if (!matchedAsset) {
-		res.status(404).json({"error": "no asset found with that id"});
-	} else {
-		assets = _.without(assets, matchedAsset);
-		res.json(matchedAsset);
-	}
+	// var matchedAsset = _.findWhere(assets, {id: assetId});
+
+	// if (!matchedAsset) {
+	// 	res.status(404).json({"error": "no asset found with that id"});
+	// } else {
+	// 	assets = _.without(assets, matchedAsset);
+	// 	res.json(matchedAsset);
+	// }
 });
 
 // PUT /assets/:id
