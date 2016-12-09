@@ -17,22 +17,42 @@ app.get('/', function (req, res) {
 
 // GET /assets
 app.get('/assets', function (req, res) {
-	var queryParams = req.query;
-	var filteredAssets = assets;
+	var query = req.query;
+	var where = {};
 
-	if (queryParams.hasOwnProperty('holding') && queryParams.holding === 'true') {
-		filteredAssets = _.where(filteredAssets, {holding: true});
-	} else if (queryParams.hasOwnProperty('holding') && queryParams.holding === 'false') {
-		filteredAssets = _.where(filteredAssets, {holding: false});
+	if (query.hasOwnProperty('holding') && query.completed === 'true') {
+		where.holding = true;
+	} else if (query.hasOwnProperty('holding') && query.holding === 'false') {
+		where.holding = false;
 	}
 
-	if (queryParams.hasOwnProperty('q') && queryParams.q.length >0) {
-		filteredAssets = _.filter(filteredAssets, function (asset) {
-			return asset.name.toLowerCase().indexOf(queryParams.q.toLowerCase()) > -1;
-		});
+	if (query.hasOwnProperty('q') && query.q.length > 0) {
+		where.name = {
+			$like: '%' + query.q + '%'
+		};
 	}
 
-	res.json(filteredAssets);
+	db.asset.findAll({where: where}).then(function (assets) {
+		res.json(assets);
+	}, function (e) {
+		res.status(500).send();
+	})
+
+	// var filteredAssets = assets;
+
+	// if (queryParams.hasOwnProperty('holding') && queryParams.holding === 'true') {
+	// 	filteredAssets = _.where(filteredAssets, {holding: true});
+	// } else if (queryParams.hasOwnProperty('holding') && queryParams.holding === 'false') {
+	// 	filteredAssets = _.where(filteredAssets, {holding: false});
+	// }
+
+	// if (queryParams.hasOwnProperty('q') && queryParams.q.length >0) {
+	// 	filteredAssets = _.filter(filteredAssets, function (asset) {
+	// 		return asset.name.toLowerCase().indexOf(queryParams.q.toLowerCase()) > -1;
+	// 	});
+	// }
+
+	// res.json(filteredAssets);
 });
 
 // GET /assets/:id
