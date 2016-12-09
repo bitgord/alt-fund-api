@@ -38,13 +38,24 @@ app.get('/assets', function (req, res) {
 // GET /assets/:id
 app.get('/assets/:id', function (req, res) {
 	var assetId = parseInt(req.params.id, 10);
-	var matchedAsset = _.findWhere(assets, {id: assetId});
+	
+	db.asset.findById(assetId).then(function (asset) {
+		if (!!asset) {
+			res.json(asset.toJSON());
+		} else {
+			res.status(404).send();
+		}
+	}, function (e) {
+		res.status(500).send();
+	});
 
-	if (matchedAsset) {
-		res.json(matchedAsset);
-	} else {
-		res.status(404).send();
-	}
+	// var matchedAsset = _.findWhere(assets, {id: assetId});
+
+	// if (matchedAsset) {
+	// 	res.json(matchedAsset);
+	// } else {
+	// 	res.status(404).send();
+	// }
 });
 
 // POST /assets
