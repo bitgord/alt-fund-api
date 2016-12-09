@@ -1,6 +1,7 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var _ = require('underscore');
+var db = require('./db.js');
 
 var app = express();
 var PORT = process.env.PORT || 3000;
@@ -50,19 +51,29 @@ app.get('/assets/:id', function (req, res) {
 app.post('/assets', function (req, res) {
 	var body = _.pick(req.body, 'name', 'symbol', 'amount', 'price', 'description', 'holding');
 
-	if (!_.isString(body.name) || !_.isString(body.symbol) || !_.isString(body.amount) || !_.isString(body.price) || body.description.trim().length === 0 || !_.isBoolean(body.holding)) {
-		return res.status(400).send();
-	}
+	// call create on db.asset
+	//		respond with 200 and todo
+	//		res.status(400).json.(e)
+	db.asset.create(body).then(function (asset) {
+		res.json(asset.toJSON());
+	}, function (e) {
+		res.status(400).json(e);
+	});
 
-	// set body.description to be trimmed value
-	body.description = body.description.trim();
 
-	// add id field
-	body.id = assetNextId++;
-	// push body into array
-	assets.push(body);
+	// if (!_.isString(body.name) || !_.isString(body.symbol) || !_.isString(body.amount) || !_.isString(body.price) || body.description.trim().length === 0 || !_.isBoolean(body.holding)) {
+	// 	return res.status(400).send();
+	// }
 
-	res.json(body);
+	// // set body.description to be trimmed value
+	// body.description = body.description.trim();
+
+	// // add id field
+	// body.id = assetNextId++;
+	// // push body into array
+	// assets.push(body);
+
+	// res.json(body);
 });
 
 // DELETE /assets/:id
@@ -135,7 +146,8 @@ app.put('/assets/:id', function (req, res) {
 	res.json(matchedAsset);
 
 });
-
-app.listen(PORT, function () {
-	console.log('Express listening on port ' + PORT);
+db.sequelize.sync().then(function () {
+	app.listen(PORT, function () {
+		console.log('Express listening on port ' + PORT);
+	});
 });

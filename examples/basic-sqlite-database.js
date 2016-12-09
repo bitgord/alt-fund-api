@@ -49,7 +49,7 @@ var Asset = sequelize.define('asset', {
 		validate: {
 		}
 	}
-})
+});
 
 sequelize.sync().then(function () {
 	console.log('Everything is synced');
