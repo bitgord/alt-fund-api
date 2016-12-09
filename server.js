@@ -36,7 +36,7 @@ app.get('/assets', function (req, res) {
 		res.json(assets);
 	}, function (e) {
 		res.status(500).send();
-	})
+	});
 
 	// var filteredAssets = assets;
 
